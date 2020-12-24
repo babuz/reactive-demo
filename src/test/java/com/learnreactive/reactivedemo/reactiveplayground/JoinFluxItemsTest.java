@@ -1,4 +1,4 @@
-package com.learnreactive.reactivedemo;
+package com.learnreactive.reactivedemo.reactiveplayground;
 
 import org.junit.Test;
 import reactor.core.publisher.Flux;
@@ -7,7 +7,6 @@ import reactor.test.StepVerifier;
 import java.time.Duration;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Locale;
 
 public class JoinFluxItemsTest {
 

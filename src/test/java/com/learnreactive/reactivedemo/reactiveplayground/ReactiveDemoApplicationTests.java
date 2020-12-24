@@ -1,4 +1,4 @@
-package com.learnreactive.reactivedemo;
+package com.learnreactive.reactivedemo.reactiveplayground;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;

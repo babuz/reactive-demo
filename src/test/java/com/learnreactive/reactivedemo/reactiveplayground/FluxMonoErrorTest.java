@@ -1,4 +1,4 @@
-package com.learnreactive.reactivedemo;
+package com.learnreactive.reactivedemo.reactiveplayground;
 
 import org.junit.Test;
 import reactor.core.publisher.Flux;
@@ -11,6 +11,7 @@ public class FluxMonoErrorTest {
     private List<String> listOfNames = Arrays.asList("A", "B", "C");
     private Flux<String> fluxOfNames = Flux.fromIterable(listOfNames);
 
+
     @Test
     public void Test_OnErrorResume() {
         Flux<String> fluxOfNamesWithError =  fluxOfNames.concatWith(Flux.error(new RuntimeException("My RuntimeException")));
@@ -20,7 +21,7 @@ public class FluxMonoErrorTest {
         });
 
         StepVerifier.create(fluxErrorWithResume.log())
-                .expectNext("A","B","C","default value")
+                .expectNext("A", "B", "C", "default value")
                 .verifyComplete();
     }
 
@@ -43,21 +44,32 @@ public class FluxMonoErrorTest {
 
     @Test
     public void Test_OnErrorReturn() {
-        Flux<String> fluxOfNamesWithError =  fluxOfNames.concatWith(Flux.error(new RuntimeException("My RuntimeException")));
+        Flux<String> fluxOfNamesWithError = fluxOfNames.concatWith(Flux.error(new RuntimeException("My RuntimeException")));
         Flux<String> fluxErrorWithReturn = fluxOfNamesWithError.onErrorReturn("default value");
 
         StepVerifier.create(fluxErrorWithReturn.log())
-                .expectNext("A","B","C")
+                .expectNext("A", "B", "C")
                 .expectNext("default value")
                 .verifyComplete();
     }
 
     @Test
+    public void Test_OnErrorRetry() {
+        Flux<String> fluxOfNamesWithError = fluxOfNames.concatWith(Flux.error(new RuntimeException("My RuntimeException")));
+        Flux<String> fluxErrorWithReturn = fluxOfNamesWithError.retry(2);
+
+        StepVerifier.create(fluxErrorWithReturn.log())
+                .expectNext("A", "B", "C")
+                .expectNext("A", "B", "C")
+                .expectNext("A", "B", "C")
+                .verifyError();
+    }
+
+    @Test
     public void Test_OnErrorContinue() {
-        Flux<String> fluxOfNamesWithError =  fluxOfNames
-                .map(s ->{
-                    if(s == "B")
-                    {
+        Flux<String> fluxOfNamesWithError = fluxOfNames
+                .map(s -> {
+                    if (s == "B") {
                         throw new RuntimeException("This letter is B");
                     }
                     return s;
