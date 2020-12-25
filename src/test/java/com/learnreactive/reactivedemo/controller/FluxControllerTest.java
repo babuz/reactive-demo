@@ -63,4 +63,22 @@ public class FluxControllerTest extends TestCase {
 
         assertEquals(expectedListOfIntegers, listEntityExchangeResult.getResponseBody());
     }
+
+    @Test
+    public void Test_Stream() {
+        Flux<Long> longFlux = testClient.get()
+                .uri("/fluxstream")
+                .accept(MediaType.APPLICATION_STREAM_JSON)
+                .exchange()
+                .expectStatus().isOk()
+                .returnResult(Long.class)
+                .getResponseBody();
+
+        StepVerifier.create(longFlux.log())
+                .expectNext(1L, 2L, 3L)
+                .thenCancel()
+                .verify();
+    }
+
+
 }

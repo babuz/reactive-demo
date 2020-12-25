@@ -17,8 +17,7 @@ public class FluxController {
     }
 
     @GetMapping(value = "/fluxstream", produces = MediaType.APPLICATION_STREAM_JSON_VALUE)
-    public Flux<Integer> getNamesByStream() {
-        return Flux.just(1, 2, 3, 4, 5)
-                .delayElements(Duration.ofMillis(500));
+    public Flux<Long> getNamesByStream() {
+        return Flux.interval(Duration.ofSeconds(1));
     }
 }
